@@ -39,16 +39,22 @@ try {
     // Construir DSN con timeout para conexiones remotas
     $dsn = "mysql:host={$db_host};port={$db_port};dbname={$db_name};charset={$db_charset}";
     
+    // Opciones de PDO con SSL/TLS habilitado para TiDB Cloud
+    $options = [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4",
+        PDO::ATTR_TIMEOUT => 10,
+        // SSL/TLS para TiDB Cloud (REQUERIDO)
+        PDO::MYSQL_ATTR_SSL_CA => true,
+        PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT => false
+    ];
+    
     $conexion = new PDO(
         $dsn,
         $db_user,
         $db_pass,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4",
-            PDO::ATTR_TIMEOUT => 10
-        ]
+        $options
     );
     
     $pdo = $conexion;
